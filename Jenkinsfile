@@ -5,7 +5,7 @@ pipeline {
         stage ("code checkout"){
             steps {
                       
-                git branch: 'main', credentialsId: 'github-id', url: 'https://github.com/waseemuddin/test-pipeline.git'
+                git branch: 'main', credentialsId: 'github-id', url: 'https://github.com/waseemuddin/simple-cicd-project01.git'
             
             }
 

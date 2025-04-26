@@ -65,7 +65,7 @@ pipeline {
         }
         stage("Image Push") {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-id', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-id-w', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
                     
                     sh "echo $PASS | docker login -u $USER --password-stdin"
                     sh 'docker push waseem63/mydockerapp:v$BUILD_ID'

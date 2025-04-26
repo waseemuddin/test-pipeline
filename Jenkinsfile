@@ -30,7 +30,7 @@ pipeline {
         stage("image push") {
             steps {
                            
-                    withCrdentials([usernamePassword(credentialsId: 'docker-hub-id-w', passwordVariable: 'PASS', usernameVariable: 'USER')]){
+                    withCrdentials([usernamePassword(credentialsId: 'docker-hub-idw', passwordVariable: 'PASS', usernameVariable: 'USER')]){
 
                         sh "echo $PASS | docker login -u $USER --password-stdin"
                         sh 'docker push waseem63/mydockerapp:v$BUILD_ID'
@@ -43,7 +43,7 @@ pipeline {
             stage("container creating") {
                 steps {
                   
-                        sh 'docker run -id --name todoapp -p 3000:3000 waseem64/mydockerapp:latest'
+                        sh 'docker run -id --name todoapp -p 3000:3000 waseem63/mydockerapp:latest'
                 
                 }
             }

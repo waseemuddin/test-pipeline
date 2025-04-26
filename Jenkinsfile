@@ -10,21 +10,27 @@ pipeline {
             }
 
         }
-        stage("image build") {
-            steps {
+        // stage("image build") {
+        //     steps {
                
-                    echo "This is Image building stage....."
-                    sh 'docker image build -t waseem63/mydockerapp:v$BUILD_ID .'
-                    sh 'dcoker image tag waseem63/mydockerapp:v$BUILD_ID waseem63/mydockerapp:latest'
+        //             echo "This is Image building stage....."
+        //             sh 'docker image build -t waseem63/mydockerapp:v$BUILD_ID .'
+        //             sh 'dcoker image tag waseem63/mydockerapp:v$BUILD_ID waseem63/mydockerapp:latest'
 
                 
-            }
-        }
+        //     }
+        // }
+        stage("image build") {
+             steps {
+                 echo "image building....."
+                 sh 'docker image build -t waseem63/mydockerapp:v$BUILD_ID .'
+                 sh 'docker image tag waseem63/mydockerapp:v$BUILD_ID waseem63/mydockerapp:latest'
+             }
+         }
         stage("image push") {
             steps {
-              
-                    echo "This is Image Pushing stage....."
-                    withCrdentials ([usernamePassword(credentialsId: 'docker-hub-id-w', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                           
+                    withCrdentials([usernamePassword(credentialsId: 'docker-hub-id-w', passwordVariable: 'PASS', usernameVariable: 'USER')]){
 
                         sh "echo $PASS | docker login -u $USER --password-stdin"
                         sh 'docker push waseem63/mydockerapp:v$BUILD_ID'

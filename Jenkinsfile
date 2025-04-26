@@ -2,40 +2,47 @@ pipeline {
     agent any
 
     stages {
-        stage("Repo Code Checkout") {
+        stage ("code checkout"){
+            steps {
+                script {                
+                git branch: 'main', credentialsId: 'github-id', url: 'https://github.com/waseemuddin/test-pipeline.git'
+               }
+            }
+
+        }
+        stage("image build") {
             steps {
                 script {
-                    echo "1st Step to checkout the github repository.... "
-                    git branch: 'main', credentialsId: 'github-id', url: 'https://github.com/waseemuddin/test-pipeline.git'
+                    echo "This is Image building stage....."
+                    sh 'docker image build -t waseem63/mydockerapp:v$BUILD_ID .'
+                    sh 'dcoker image tag waseem63/mydockerapp:v$BUILD_ID waseem63/mydockerapp:latest'
+
+                }
             }
         }
-    }
-        stage("Image Build") {
+        stage("image push") {
             steps {
                 script {
-                     echo "2nd Step to building the image......"
+                    echo "This is Image Pushing stage....."
+                    withCrdentials ([usernamePassword(credentialsId: 'docker-hub-id-w', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+
+                        sh "echo $PASS | docker login -u $USER --password-stdin"
+                        sh 'docker push waseem63/mydockerapp:v$BUILD_ID'
+                        sh 'docker push waseem63/mydockerapp:latest'
+                        sh 'docker rmi waseem63/mydockerapp:v$BUILD_ID'                                                
                     }
                 }
             }
-        stage("Image Push") {
-            steps {
-                script {
-                    echo "3rd Step is to pushing the image to docker hub repo...."
-
+            stage("container creating") {
+                steps {
+                    script {
+                        sh 'docker run -id --name todoapp -p 3000:3000 waseem/mydockerapp:latest'
+                    }
                 }
             }
         }
-        stage("Create Container") {
-            steps {
-                script {
-                    echo "4th step is to create the docker container and run...."
-                }
-            }
-        }
-
     }
 }
-
 
 
 

@@ -29,7 +29,7 @@ pipeline {
                         sh "echo $PASS | docker login -u $USER --password-stdin"
                         sh 'docker push waseem63/mydockerapp:v$BUILD_ID'
                         sh 'docker push waseem63/mydockerapp:latest'
-                        sh 'docker rmi waseem63/mydockerapp:v$BUILD_ID'                                                
+                        sh 'docker rmi waseem63/mydockerapp:v$BUILD_ID waseem63/mydockerapp:latest'
                     }
                 }
             }

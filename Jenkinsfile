@@ -62,7 +62,7 @@ pipeline {
                 script {
                     try {
                         echo "This is Git Checkout Stage....."   
-                        git branch: 'main', credentialsId: 'github-id', url: 'https://github.com/waseemuddin/test-pipeline.git'
+                        git branch: 'master', credentialsId: 'github-id', url: 'https://github.com/waseemuddin/test-pipeline.git'
                     } catch (err) {
                         echo "Checkout failed: ${err}"
                         error("Stopping Pipeline due to checkout failure!")

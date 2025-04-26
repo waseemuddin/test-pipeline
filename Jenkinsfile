@@ -4,46 +4,47 @@ pipeline {
     stages {
         stage ("code checkout"){
             steps {
-                      
-                git branch: 'main', credentialsId: 'github-id', url: 'https://github.com/waseemuddin/test-pipeline.git'
+                script {
+                 
+                  echo "This is Git Checkout Stage....."   
+                  git branch: 'main', credentialsId: 'github-id', url: 'https://github.com/waseemuddin/test-pipeline.git'
             
+                }
             }
 
         }
-        // stage("image build") {
-        //     steps {
-               
-        //             echo "This is Image building stage....."
-        //             sh 'docker image build -t waseem63/mydockerapp:v$BUILD_ID .'
-        //             sh 'dcoker image tag waseem63/mydockerapp:v$BUILD_ID waseem63/mydockerapp:latest'
 
-                
-        //     }
-        // }
         stage("image build") {
              steps {
-                 echo "image building....."
+                script {
+                 echo "This is Image Building....."
                  sh 'docker image build -t waseem63/mydockerapp:v$BUILD_ID .'
                  sh 'docker image tag waseem63/mydockerapp:v$BUILD_ID waseem63/mydockerapp:latest'
+
+                }
              }
          }
         stage("image push") {
             steps {
-                           
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-idw', passwordVariable: 'PASS', usernameVariable: 'USER')]){
-                    //withCredentials([usernamePassword(credentialsId: 'docker-hub-id-w', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                script {
+                        echo "This is Image Pushing Stage......"
+                        withCredentials([usernamePassword(credentialsId: 'docker-hub-idw', passwordVariable: 'PASS', usernameVariable: 'USER')]){
                         sh "echo $PASS | docker login -u $USER --password-stdin"
                         sh 'docker push waseem63/mydockerapp:v$BUILD_ID'
                         sh 'docker push waseem63/mydockerapp:latest'
                         sh 'docker rmi waseem63/mydockerapp:v$BUILD_ID waseem63/mydockerapp:latest'
-                   
+                   }
                 }
             }
         }
             stage("container creating") {
                 steps {
-                  sh 'docker run -itd --name todoapp -p 3000:3000 waseem63/mydockerapp:latest'
-                 //sh 'docker run -itd --name todoapp -p 3000:3000 waseem63/mydockerapp:latest'
+                  script {
+                    echo "This is Container Creating Stage......"
+                    sh 'docker run -itd --name todoapp -p 3000:3000 waseem63/mydockerapp:latest'
+                 
+                  }
+                  
 
                 }
             }
